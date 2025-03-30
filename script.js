@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	/**
-	 * Handles the selection of answers and updates the score.
+	 * Handles the selection of answers and updates score.
 	 */
 	document.addEventListener("change", function (event) {
 		if (event.target.matches('input[type="radio"]')) {
