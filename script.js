@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	/**
-	 * Creates HTML for answer options.
+	 * Creates answer options for a question.
 	 * @param {string} correctAnswer - The correct answer for the question.
 	 * @param {string[]} incorrectAnswers - Array of incorrect answers.
 	 * @param {number} questionIndex - The index of the current question.
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	newPlayerButton.addEventListener("click", newPlayer);
 
 	/**
-	 * Handles the trivia form submission.
+	 * Handles form submission
 	 * @param {Event} event - The submit event.
 	 */
 	function handleFormSubmit(event) {
@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	/**
-	 * Saves the player's score to localStorage (or a server in a real application).
+	 * Saves the player's score to localStorage.
 	 * @param {string} username - Player's name.
 	 * @param {number} score - Player's score.
 	 */
