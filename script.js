@@ -1,13 +1,16 @@
-/**
- * Initializes the Trivia Game when the DOM is fully loaded.
- */
 document.addEventListener("DOMContentLoaded", function () {
 	const form = document.getElementById("trivia-form");
 	const questionContainer = document.getElementById("question-container");
+	const usernameInput = document.getElementById("username");
 	const newPlayerButton = document.getElementById("new-player");
+	const submitButton = document.getElementById("submit-game");
+	let currentScore = 0; 
+
+	// Reset the score list every time the page is loaded 
+	localStorage.removeItem("scores");
 
 	// Initialize the game
-	// checkUsername(); Uncomment once completed
+	checkUsername();
 	fetchQuestions();
 	displayScores();
 
@@ -80,11 +83,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		);
 		return allAnswers
 			.map(
-				(answer) => `
+				(answer) => ` 
             <label>
-                <input type="radio" name="answer${questionIndex}" value="${answer}" ${
-					answer === correctAnswer ? 'data-correct="true"' : ""
-				}>
+                <input type="radio" name="answer${questionIndex}" value="${answer}" data-correct="${answer === correctAnswer}">
                 ${answer}
             </label>
         `
@@ -102,6 +103,94 @@ document.addEventListener("DOMContentLoaded", function () {
 	 */
 	function handleFormSubmit(event) {
 		event.preventDefault();
-		//... form submission logic including setting cookies and calculating score
+		const username = usernameInput.value.trim();
+		if (username) {
+			setCookie("username", username, 7); // Store username in cookie
+			alert("Game finished! Your final score: " + currentScore); // Show final score
+			saveScore(username, currentScore);
+		}
 	}
+
+	// Cookie management functions
+	function setCookie(name, value, days) {
+		const date = new Date();
+		date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+		const expires = "expires=" + date.toUTCString();
+		document.cookie = name + "=" + value + ";" + expires + ";path=/";
+	}
+
+	function getCookie(name) {
+		const nameEq = name + "=";
+		const ca = document.cookie.split(";");
+		for (let i = 0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) == " ") c = c.substring(1);
+			if (c.indexOf(nameEq) == 0) return c.substring(nameEq.length, c.length);
+		}
+		return "";
+	}
+
+	/**
+	 * Checks if a username cookie exists and updates the UI accordingly.
+	 */
+	function checkUsername() {
+		const username = getCookie("username");
+		if (username) {
+			usernameInput.value = username;
+			newPlayerButton.classList.remove("hidden");
+		}
+	}
+
+	/**
+	 * Clears the user session and resets the game.
+	 */
+	function newPlayer() {
+		setCookie("username", "", -1); // Delete the username cookie
+		usernameInput.value = "";
+		currentScore = 0; // Reset score
+		questionContainer.innerHTML = ""; // Clear questions
+		fetchQuestions(); // Fetch new questions
+	}
+
+	/**
+	 * Saves the player's score to localStorage (or a server in a real application).
+	 * @param {string} username - Player's name.
+	 * @param {number} score - Player's score.
+	 */
+	function saveScore(username, score) {
+		let scores = JSON.parse(localStorage.getItem("scores")) || [];
+		scores.push({ username, score });
+		localStorage.setItem("scores", JSON.stringify(scores));
+		displayScores();
+	}
+
+	/**
+	 * Displays the scores from localStorage.
+	 */
+	function displayScores() {
+		const scoreTableBody = document.querySelector("#score-table tbody");
+		const scores = JSON.parse(localStorage.getItem("scores")) || [];
+		scoreTableBody.innerHTML = scores
+			.map(
+				(score) => `
+            <tr>
+                <td>${score.username}</td>
+                <td>${score.score}</td>
+            </tr>
+        `
+			)
+			.join("");
+	}
+
+	/**
+	 * Handles the selection of answers and updates the score.
+	 */
+	document.addEventListener("change", function (event) {
+		if (event.target.matches('input[type="radio"]')) {
+			const isCorrect = event.target.dataset.correct === "true";
+			if (isCorrect) {
+				currentScore++;
+			}
+		}
+	});
 });
