@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Reset the score list every time the page is loaded 
 	localStorage.removeItem("scores");
 
-	// Initialize the game
+	// Starts the game
 	checkUsername();
 	fetchQuestions();
 	displayScores();
