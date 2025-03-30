@@ -47,11 +47,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	/**
-	 * Displays fetched trivia questions.
+	 * Displays trivia questions.
 	 * @param {Object[]} questions - Array of trivia questions.
 	 */
 	function displayQuestions(questions) {
-		questionContainer.innerHTML = ""; // Clear existing questions
+		questionContainer.innerHTML = ""; // Clear old questions that are there
 		questions.forEach((question, index) => {
 			const questionDiv = document.createElement("div");
 			questionDiv.innerHTML = `
